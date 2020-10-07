@@ -1,7 +1,14 @@
 import numpy as np
 import pytest
 
-from rcs import rcs_switch_off, potential_energy, kinetic_energy, edm_energy, is_consistent, edm_altitude
+from rcs import (
+    rcs_switch_off,
+    potential_energy,
+    kinetic_energy,
+    edm_energy,
+    is_consistent,
+    edm_altitude,
+)
 
 
 def test_rcs_switch_off_happens_if_energy_below_threshold():
@@ -10,9 +17,7 @@ def test_rcs_switch_off_happens_if_energy_below_threshold():
 
     expected_result = True
 
-    result = rcs_switch_off(
-        rda_range, pitch, vertical_velocity, energy_threshold
-    )
+    result = rcs_switch_off(rda_range, pitch, vertical_velocity, energy_threshold)
 
     assert result == expected_result
 
@@ -24,9 +29,7 @@ def test_rcs_switch_off_does_not_happen_if_energy_above_threshold():
 
     expected_result = False
 
-    result = rcs_switch_off(
-        rda_range, pitch, vertical_velocity, energy_threshold
-    )
+    result = rcs_switch_off(rda_range, pitch, vertical_velocity, energy_threshold)
 
     assert result == expected_result
 
@@ -37,9 +40,18 @@ def test_kinetic_energy_zero_velocity_is_zero():
     assert result == expected_result
 
 
-@pytest.mark.parametrize("vertical_velocity", [
-    1.0, 2.0, 10000.0, 0.1, -1.0, -2.0, -1000.0,
-])
+@pytest.mark.parametrize(
+    "vertical_velocity",
+    [
+        1.0,
+        2.0,
+        10000.0,
+        0.1,
+        -1.0,
+        -2.0,
+        -1000.0,
+    ],
+)
 def test_kinetic_energy_for_nonzero_velocity_is_always_positive(vertical_velocity):
     result = kinetic_energy(vertical_velocity)
     assert result > 0
@@ -53,12 +65,19 @@ def test_potential_energy_has_same_sign_as_altitude():
     assert result < 0.0
 
 
-@pytest.mark.parametrize("vertical_velocity", [
-    1.0, 2.0, 10000.0, 0.1, -1.0, -2.0, -1000.0,
-])
-@pytest.mark.parametrize("altitude", [
-    1.0, 10.0, 100.0
-])
+@pytest.mark.parametrize(
+    "vertical_velocity",
+    [
+        1.0,
+        2.0,
+        10000.0,
+        0.1,
+        -1.0,
+        -2.0,
+        -1000.0,
+    ],
+)
+@pytest.mark.parametrize("altitude", [1.0, 10.0, 100.0])
 def test_energy_is_sum_of_kinetic_plus_potential(vertical_velocity, altitude):
     e_k = kinetic_energy(vertical_velocity)
     e_g = potential_energy(altitude)
